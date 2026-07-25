@@ -1,0 +1,27 @@
+﻿using E_Commerce.Domain.Contracts;
+using E_Commerce.Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace E_Commerce.Infrastructure
+{
+    public static class InfrastructureServiceRegistration
+    {
+        public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddDbContext<Data.StoreDbContext>(options =>
+            {
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+            });
+
+
+
+            //services.AddScoped<IDataSeeder, DataSeedig.CatalogDataSeeder>();
+           
+            services.AddKeyedScoped<IDataSeeder, DataSeedig.CatalogDataSeeder>("Catalog");
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            return services;
+        }
+    }
+}
